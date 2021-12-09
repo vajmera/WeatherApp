@@ -2,4 +2,4 @@
 Uses metaweather's API.
 
 
-<img src="images/index.png" width=200 >
+<img src="images/architecture.JPG" width=200 >
