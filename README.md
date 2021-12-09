@@ -3,7 +3,7 @@ Uses metaweather's API.
 
 Credits :  Prof.Shad Sluiter 
 
-<img src="images/img.PNG" width=800 >
+<img src="images/img.png" width=800 >
 
 
 
