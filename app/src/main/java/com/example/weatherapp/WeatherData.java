@@ -41,10 +41,10 @@ public class WeatherData {
 
 
         String ourQuery =cityName;
-        String ByName = url + ourQuery;
+        String byName = url + ourQuery;
 
 
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, ByName, null, new Response.Listener<JSONArray>() {
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, byName, null, new Response.Listener<JSONArray>() {
             @Override
 
             public void onResponse(JSONArray response) {
@@ -80,10 +80,10 @@ public class WeatherData {
 //------------------------------------------------------------------------------------------------------
     public interface ForeCastByIdResponse{
         void onError(String message);
-        void onResponse(WeatherReportModel weatherReportModel);
+        void onResponse(List<WeatherReportModel> weatherReportModels);
     }
     public void  getCityForecastById (String cityId,ForeCastByIdResponse foreCastByIdResponse){
-        List<WeatherReportModel> report=new ArrayList<>(); // it gives a jsonObject
+        List<WeatherReportModel> weatherReportModels=new ArrayList<>(); // it gives a jsonObject
 
         //First object is jsonObject and then we have jsonArray
         String url=QUERY_FOR_CITY_WEATHER_BY_ID+cityId;
@@ -94,9 +94,13 @@ public class WeatherData {
 
                // Toast.makeText(context, response.toString(), Toast.LENGTH_SHORT).show();
                 try {
-                    WeatherReportModel first_day=new WeatherReportModel();
+
                     JSONArray consolodated_weather_list= response.getJSONArray("consolidated_weather");
-                    JSONObject first_data_from_api= (JSONObject) consolodated_weather_list.get(0); //get 0th element from that list as it contains 6 items of jsonobject type
+
+                    for(int i=0;i<consolodated_weather_list.length();i++) {
+
+                        WeatherReportModel one_day_weather=new WeatherReportModel();
+                        JSONObject first_data_from_api = (JSONObject) consolodated_weather_list.get(i); //get 0th element from that list as it contains 6 items of jsonobject type
 
 //                    private int id;
 //                    private String weather_state_name;
@@ -113,28 +117,30 @@ public class WeatherData {
 //                    private int humidity;
 //                    private float visibility;
 //                    private int predictability;
-                    first_day.setId( first_data_from_api.getInt("id"));
-                    first_day.setWeather_state_name(first_data_from_api.getString("weather_state_name"));
-                    first_day.setWeather_state_abbr(first_data_from_api.getString("weather_state_abbr"));
-                    first_day.setWind_direction_compass(first_data_from_api.getString("wind_direction_compass"));
+                        one_day_weather.setId(first_data_from_api.getInt("id"));
+                        one_day_weather.setWeather_state_name(first_data_from_api.getString("weather_state_name"));
+                        one_day_weather.setWeather_state_abbr(first_data_from_api.getString("weather_state_abbr"));
+                        one_day_weather.setWind_direction_compass(first_data_from_api.getString("wind_direction_compass"));
 
-                    first_day.setCreated(first_data_from_api.getString("created"));
-                    first_day.setApplicable_data(first_data_from_api.getString("applicable_date"));
-                    first_day.setMin_temp(first_data_from_api.getLong("min_temp"));
-                    first_day.setMax_temp(first_data_from_api.getLong("max_temp"));
-                    first_day.setThe_temp(first_data_from_api.getLong("the_temp"));
+                        one_day_weather.setCreated(first_data_from_api.getString("created"));
+                        one_day_weather.setApplicable_data(first_data_from_api.getString("applicable_date"));
+                        one_day_weather.setMin_temp(first_data_from_api.getLong("min_temp"));
+                        one_day_weather.setMax_temp(first_data_from_api.getLong("max_temp"));
+                        one_day_weather.setThe_temp(first_data_from_api.getLong("the_temp"));
 
-                    first_day.setWind_speed(first_data_from_api.getLong("wind_speed"));
-                    first_day.setWind_direction(first_data_from_api.getLong("wind_direction"));
+                        one_day_weather.setWind_speed(first_data_from_api.getLong("wind_speed"));
+                        one_day_weather.setWind_direction(first_data_from_api.getLong("wind_direction"));
 
-                    first_day.setAir_pressure(first_data_from_api.getInt("air_pressure"));
-                    first_day.setHumidity(first_data_from_api.getInt("humidity"));
-                    first_day.setVisibility(first_data_from_api.getLong("visibility"));
+                        one_day_weather.setAir_pressure(first_data_from_api.getInt("air_pressure"));
+                        one_day_weather.setHumidity(first_data_from_api.getInt("humidity"));
+                        one_day_weather.setVisibility(first_data_from_api.getLong("visibility"));
 
-                    first_day.setPredictability(first_data_from_api.getInt("predictability"));
+                        one_day_weather.setPredictability(first_data_from_api.getInt("predictability"));
 
-                    foreCastByIdResponse.onResponse(first_day);
-                    //we want to return this first_day object hence we again use callbacks
+                        weatherReportModels.add(one_day_weather);
+                        foreCastByIdResponse.onResponse(weatherReportModels);
+                    }
+                    //we want to return this one_day_weather object hence we again use callbacks
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -155,6 +161,51 @@ public class WeatherData {
 
 
     }
+
+    public interface GetCityByNameCallback
+    {
+        void onError(String message);
+        void onResponse(List<WeatherReportModel> weatherReportModels);
+    }
+
+
+    public void getCityForecastByName(String cityName,GetCityByNameCallback getCityByNameCallback)
+    {
+        List<WeatherReportModel> weatherReportModels=new ArrayList<>();
+
+        //Step1: Fetch the cityId using cityName
+        //Step2: Fetch the forecast using cityId
+
+        getCityId(cityName, new VolleyResponseListener() {
+            @Override
+            public void onError(String message) {
+
+            }
+
+            @Override
+            public void onResponse(String cityId) {
+
+                //...we have city id
+                getCityForecastById(cityId, new ForeCastByIdResponse() {
+                    @Override
+                    public void onError(String message) {
+
+                    }
+
+                    @Override
+                    public void onResponse(List<WeatherReportModel> weatherReportModels) {
+
+                        //we have the wather report
+                        getCityByNameCallback.onResponse(weatherReportModels);
+                    }
+                });
+            }
+        });
+
+
+
+    }
+
 
 
 

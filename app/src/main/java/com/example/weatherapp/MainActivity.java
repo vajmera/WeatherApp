@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -22,6 +23,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -130,10 +132,10 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
 
-        String curr_url = "https://www.metaweather.com/api/location/";
-        String temp = editText.getText().toString();
+        //String curr_url = "https://www.metaweather.com/api/location/";
+        //String temp = editText.getText().toString();
 
-        String send_url = curr_url + temp + "/";
+        //String send_url = curr_url + temp + "/";
 
         btn_id.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -148,59 +150,37 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onResponse(WeatherReportModel weatherReportModel) {
-                        Toast.makeText(MainActivity.this,weatherReportModel.toString(), Toast.LENGTH_SHORT).show();
+                    public void onResponse(List<WeatherReportModel> weatherReportModels) {
+                        //Toast.makeText(MainActivity.this,weatherReportModel.toString(), Toast.LENGTH_SHORT).show();
+
+                        //We now create our list using layout adapter, using array adapter
+                        ArrayAdapter arrayAdapter=new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1,weatherReportModels);
+                        ls_view.setAdapter(arrayAdapter);
                     }
                 });
 
-                String ByName = "";
+               // String ByName = "";
                 btn_city_name.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
 
-                        JsonArrayRequest jsonArrayRequest1 = new JsonArrayRequest(Request.Method.GET, ByName, null, new Response.Listener<JSONArray>() {
+                        weatherData.getCityForecastByName(editText.getText().toString(), new WeatherData.GetCityByNameCallback(){
                             @Override
-                            public void onResponse(JSONArray response) {
-                                String cityId1 = "";
-                                try {
-                                    JSONObject cityInformtaion = response.getJSONObject(0);
-                                    cityId1 = cityInformtaion.getString("woeid");
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-
-
-                                JsonArrayRequest jsonArrayRequest2 = new JsonArrayRequest(Request.Method.GET, curr_url + cityId1, null, new Response.Listener<JSONArray>() {
-                                    @Override
-                                    public void onResponse(JSONArray response) {
-
-
-                                        Toast.makeText(MainActivity.this, "Success in InnerGET ", Toast.LENGTH_SHORT).show();
-
-
-                                    }
-                                }, new Response.ErrorListener() {
-                                    @Override
-                                    public void onErrorResponse(VolleyError error) {
-                                        Toast.makeText(MainActivity.this, "Failed in InnerGET ", Toast.LENGTH_SHORT).show();
-
-                                    }
-                                });
-
-                                //requestQueue.add(jsonArrayRequest2);
+                            public void onError(String message) {
+                                Toast.makeText(MainActivity.this,"ERROROO", Toast.LENGTH_SHORT).show();
 
 
                             }
-                        }, new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                Toast.makeText(MainActivity.this, "Failed in OuterGET ", Toast.LENGTH_SHORT).show();
 
+                            @Override
+                            public void onResponse(List<WeatherReportModel> weatherReportModels) {
+                                //Toast.makeText(MainActivity.this,weatherReportModel.toString(), Toast.LENGTH_SHORT).show();
+
+                                //We now create our list using layout adapter, using array adapter
+                                ArrayAdapter arrayAdapter=new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1,weatherReportModels);
+                                ls_view.setAdapter(arrayAdapter);
                             }
                         });
-
-                        // requestQueue.add(jsonArrayRequest1);
-                        Toast.makeText(MainActivity.this, "Successfully clicked to get weather using name of city ", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
