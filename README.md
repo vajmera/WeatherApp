@@ -1,7 +1,7 @@
 # WeatherApp
 Uses metaweather's API.
 
-Credits :  Prof.Shad Sluiter 
+Credits : Shad Sluiter 
 
 <img src="images/img.png" width=800 >
 
