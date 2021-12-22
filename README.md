@@ -16,4 +16,4 @@ Credits : Shad Sluiter
 2. There is also a ListView to show the data.
 
 
-<img src="images/App.jpg" width=100 >
+<img src="images/App.jpg" width=200 >
