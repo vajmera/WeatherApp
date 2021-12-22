@@ -16,4 +16,66 @@ Credits : Shad Sluiter
 2. There is also a ListView to show the data.
 
 
-<img src="images/App.jpg" width=200 >
+
+<div align="center">
+<table>
+  <tr>
+    <td>UI</td>
+    
+    
+  </tr>
+  <tr>
+    <td><img src="images/App.jpg" width=200 ></td>
+    
+  </tr>
+ </table>
+
+</div>
+<br/><br/>
+<br/><br/>
+<br/><br/>
+
+<div align="center">
+<table>
+  <tr>
+    <td>GettingCityID</td>
+     <td>GotCityID</td>
+     <td>UsingCityID</td>
+  </tr>
+  <tr>
+    <td><img src="images/gettingCityId.jpg" width=200 ></td>
+    <td><img src="images/gotCityId.jpg" width=200 ></td>
+    <td><img src="images/usingCityId.jpg " width=200 ></td>
+  </tr>
+ </table>
+
+</div>
+<br/><br/>
+
+<br/><br/>
+<br/><br/>
+
+
+
+<div align="center">
+<table>
+  <tr>
+    <td>UsingCityName</td>
+   
+     
+  </tr>
+  <tr>
+    <td>
+  <img src="images/usingCityName.jpg " width=200 >
+   </td>
+  
+   
+  </tr>
+ </table>
+
+</div>
+<br/><br/>
+
+<br/><br/>
+<br/><br/>
+
